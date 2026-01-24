@@ -1,0 +1,10 @@
+# Local/private book files (do not commit)
+library-ebooks/books/
+
+# Common ebook/document formats
+*.pdf
+*.epub
+*.mobi
+*.azw
+*.azw3
+*.djvu
