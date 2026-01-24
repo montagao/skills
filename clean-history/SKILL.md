@@ -14,8 +14,8 @@ Reimplement the current branch on a new branch with a clean, narrative-quality g
 
 - Source branch: !`git branch --show-current`
 - Git status: !`git status --short`
-- Commits since main: !`git log main..HEAD --oneline`
-- Full diff against main: !`git diff main...HEAD --stat`
+- Default branch: !`git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || git config init.defaultBranch || echo main`
+- Remote branches: !`git branch -r --list 'origin/main' 'origin/master' 2>/dev/null | head -1 | sed 's/.*origin\///'`
 
 ## Task
 
@@ -23,18 +23,26 @@ Reimplement the current branch on a new branch with a clean, narrative-quality g
 
 **New Branch Name**: Use `$ARGUMENTS` if provided, otherwise `{source_branch}-clean`.
 
+**Base Branch**: Determine the base branch using this priority:
+1. The "Default branch" from context above (if available)
+2. The first available branch from "Remote branches" (`origin/main` or `origin/master`)
+3. Fall back to `main` if neither is available
+
 ### Steps
 
 1. **Validate the source branch**
    - Ensure no uncommitted changes or merge conflicts
-   - Confirm it is up to date with `main`
+   - Confirm the source branch is not the same as the base branch (error if so)
+   - Run `git log {base}..HEAD --oneline` to see commits to clean
+   - Run `git diff {base}...HEAD --stat` to see the full diff
+   - Confirm source branch is up to date with the base branch
 
 2. **Analyze the diff**
-   - Study all changes between source branch and `main`
+   - Study all changes between source branch and the base branch
    - Form a clear understanding of the final intended state
 
 3. **Create the clean branch**
-   - Create a new branch off of `main` using the new branch name
+   - Create a new branch off of the base branch using the new branch name
 
 4. **Plan the commit storyline**
    - Break the implementation into self-contained logical steps
