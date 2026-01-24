@@ -43,10 +43,10 @@ The key is found in your internal library-proxy/account settings (or whatever sy
 
 | Task         | Command                                                              |
 | ------------ | -------------------------------------------------------------------- |
-| Search       | `python3 library.py search "query" --format pdf`                     |
-| Get details  | `python3 library.py details <md5>`                                   |
-| Download     | `python3 library.py download <md5> --output /path/`                  |
-| Verify match | `python3 library.py search "title author" --verify "expected title"` |
+| Search       | `python3 scripts/library.py search "query" --format pdf`             |
+| Get details  | `python3 scripts/library.py details <md5>`                           |
+| Download     | `python3 scripts/library.py download <md5> --output /path/`          |
+| Verify match | `python3 scripts/library.py search "title author" --verify "expected title"` |
 
 ## Environment Setup
 
@@ -88,13 +88,13 @@ digraph download_flow {
 
 ```bash
 # Search with format preference
-python3 library.py search "Clean Code Robert Martin" --format pdf --limit 5
+python3 scripts/library.py search "Clean Code Robert Martin" --format pdf --limit 5
 
 # Verify it's the right book, get details
-python3 library.py details adb5293cf369256a883718e71d3771c3
+python3 scripts/library.py details adb5293cf369256a883718e71d3771c3
 
 # Download
-python3 library.py download adb5293cf369256a883718e71d3771c3 --output ./books/
+python3 scripts/library.py download adb5293cf369256a883718e71d3771c3 --output ./books/
 ```
 
 ### Handle multiple editions
