@@ -298,6 +298,9 @@ def download_book(md5, output_dir=None, path_index=0, domain_index=0):
         else:
             filename = f"{md5}.pdf"
 
+    ext = Path(filename).suffix or ".pdf"
+    filename = f"{md5[:8]}{ext}"
+
     output_path = output_dir / filename
 
     print(f"Downloading to: {output_path}")
@@ -344,7 +347,7 @@ def main():
                                  help='Server index (default: 0)')
 
     # Check key command
-    check_parser = subparsers.add_parser('check-key', help='Check if API key is set')
+    subparsers.add_parser('check-key', help='Check if API key is set')
 
     args = parser.parse_args()
 
