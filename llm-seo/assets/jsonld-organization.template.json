@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "[Organization Name]",
+  "url": "https://[domain].com",
+  "logo": "https://[domain].com/logo.png",
+  "sameAs": [
+    "https://github.com/[org]",
+    "https://linkedin.com/company/[org]",
+    "https://twitter.com/[handle]"
+  ],
+  "description": "[Consistent tagline matching llms.txt]",
+  "foundingDate": "[YYYY]",
+  "founder": {
+    "@type": "Person",
+    "name": "[Founder Name]"
+  }
+}

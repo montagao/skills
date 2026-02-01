@@ -1,0 +1,17 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "[Name]",
+  "url": "https://[domain].com",
+  "sameAs": [
+    "https://github.com/[username]",
+    "https://linkedin.com/in/[username]",
+    "https://bsky.app/profile/[handle]"
+  ],
+  "jobTitle": "[Title]",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "[Company]"
+  },
+  "description": "[Consistent tagline matching llms.txt]"
+}
