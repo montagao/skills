@@ -3,7 +3,7 @@
 Legal Library book search and download tool.
 
 Requires LIBRARY_KEY environment variable for downloads.
-Get a key by becoming a member at https://annas-archive.org/donate
+Get a key from your library provider.
 """
 
 import argparse
@@ -16,42 +16,14 @@ import urllib.parse
 from pathlib import Path
 
 
-# Mirror domains in order of preference
-MIRROR_DOMAINS = [
-    "annas-archive.org",
-    "annas-archive.li",
-    "annas-archive.se",
-    "annas-archive.in",
-    "annas-archive.pm",
-]
-
-# Cache for working domain (set after first successful request)
-_working_domain = None
+# Base URL for the library service. Can be overridden via LIBRARY_BASE_URL.
+DEFAULT_BASE_URL = "https://example.com"
 
 
 def get_base_url():
-    """Get a working base URL, trying mirrors if needed."""
-    global _working_domain
-
-    if _working_domain:
-        return f"https://{_working_domain}"
-
-    # Try each mirror until one works
-    for domain in MIRROR_DOMAINS:
-        url = f"https://{domain}/"
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=10) as response:
-                if response.status == 200:
-                    _working_domain = domain
-                    # print(f"Using mirror: {domain}", file=sys.stderr)
-                    return f"https://{domain}"
-        except Exception:
-            continue
-
-    # If none worked, default to .org and let it fail with a proper error
-    print("Warning: Could not connect to any mirror", file=sys.stderr)
-    return "https://annas-archive.org"
+    """Get the base URL for the library service."""
+    base_url = os.environ.get("LIBRARY_BASE_URL") or DEFAULT_BASE_URL
+    return base_url.rstrip("/")
 
 
 def get_api_key():
@@ -62,12 +34,7 @@ def get_api_key():
 ╔══════════════════════════════════════════════════════════════════╗
 ║  LIBRARY_KEY not set                                       ║
 ╠══════════════════════════════════════════════════════════════════╣
-║  Downloads require an Anna's Archive membership.                 ║
-║                                                                  ║
-║  To set up:                                                      ║
-║  1. Get a membership: https://annas-archive.org/donate           ║
-║  2. Find your key in Account Settings                            ║
-║  3. Set the environment variable:                                ║
+║  Downloads require an Library Archive membership.                 ║
 ║                                                                  ║
 ║     export LIBRARY_KEY="your-key-here"                     ║
 ║                                                                  ║
@@ -94,7 +61,7 @@ def fetch_url(url, headers=None):
 
 def search_books(query, format_filter=None, sort_by_year=True, limit=10, verify=None):
     """
-    Search Anna's Archive for books.
+    Search the library service for books.
 
     Args:
         query: Search query (title, author, or both)
@@ -213,7 +180,7 @@ def get_book_details(md5):
     if 'title' not in details:
         page_title = re.search(r'<title>([^<]+)', html)
         if page_title:
-            details['title'] = page_title.group(1).replace(" - Anna's Archive", "").strip()
+            details['title'] = page_title.group(1).split(" - ", 1)[0].strip()
 
     # Find download options
     fast_downloads = re.findall(r'href="/fast_download/([^/]+)/(\d+)/(\d+)"', html)
@@ -316,7 +283,7 @@ def download_book(md5, output_dir=None, path_index=0, domain_index=0):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Search and download ebooks from Anna's Archive",
+        description="Search and download ebooks from a library service",
         epilog="Requires LIBRARY_KEY environment variable for downloads."
     )
 

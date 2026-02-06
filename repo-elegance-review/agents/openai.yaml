@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Elegance Review"
+  short_description: "Assess repo elegance and suggest concrete improvements"
+  default_prompt: "Review this repository for elegance. Explain why it feels clean or messy with evidence from file paths, then list actionable improvements with reasoning."
