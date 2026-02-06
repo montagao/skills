@@ -37,6 +37,7 @@ Use `AskUserQuestion` to collect (skip any the user already provided):
 4. **Login route** — Where the login form lives (default: `/login` or `/sign-in`)
 5. **Focus areas** — What matters most: scroll behavior, layout, typography, specific components, mobile experience, etc.
 6. **Viewport selection** — Standard set (8 viewports) or custom. See `references/viewports.md`.
+7. **Artifacts folder** — An accessible path to store screenshots (default: `./ui-review-artifacts`)
 
 Keep it to 2 questions per round. Move on once you have URL, route, and credentials at minimum.
 
@@ -67,6 +68,15 @@ agent-browser --session ui-review wait --load networkidle
 
 ## Step 3: Multi-Viewport Capture
 
+Before capturing, set up an accessible artifacts folder with a stable layout:
+
+```bash
+export ARTIFACTS_DIR="<path>"   # default: ./ui-review-artifacts
+mkdir -p "$ARTIFACTS_DIR"/{before,after,combined}
+```
+
+Use `before/` for the initial baseline screenshots. After fixes, recapture into `after/` using the same filenames to allow pairing.
+
 Minimum viewport set — test ALL of these:
 
 | Label | Width | Height |
@@ -90,7 +100,7 @@ agent-browser --session "vp-<label>" eval "
   window.dispatchEvent(new Event('resize'));
 "
 agent-browser --session "vp-<label>" wait 1000
-agent-browser --session "vp-<label>" screenshot "<scratchpad>/<label>.png" --full
+agent-browser --session "vp-<label>" screenshot "$ARTIFACTS_DIR/before/<label>.png" --full
 ```
 
 If cookies don't transfer between sessions, log in again per session or reuse the main `ui-review` session and resize with eval.
@@ -98,13 +108,30 @@ If cookies don't transfer between sessions, log in again per session or reuse th
 Also test scroll behavior at each viewport:
 ```bash
 agent-browser --session "vp-<label>" scroll down 500
-agent-browser --session "vp-<label>" screenshot "<scratchpad>/<label>-scrolled.png"
+agent-browser --session "vp-<label>" screenshot "$ARTIFACTS_DIR/before/<label>-scrolled.png"
 agent-browser --session "vp-<label>" scroll up 500
 ```
 
 **Use subagents** (Task tool, subagent_type=Bash) to parallelize viewport captures.
 
 See `references/viewports.md` for additional viewport presets including unusual sizes.
+
+After you have both `before/` and `after/`, create combined images with labels:
+
+```bash
+for f in "$ARTIFACTS_DIR"/before/*.png; do
+  base="$(basename "$f")"
+  before="$ARTIFACTS_DIR/before/$base"
+  after="$ARTIFACTS_DIR/after/$base"
+  [ -f "$after" ] || continue
+  magick \
+    \( "$before" -background white -gravity north -splice 0x60 -pointsize 32 -fill "#111" -annotate +0+10 "BEFORE" \) \
+    \( "$after" -background white -gravity north -splice 0x60 -pointsize 32 -fill "#111" -annotate +0+10 "AFTER" \) \
+    +append "$ARTIFACTS_DIR/combined/$base"
+done
+```
+
+If ImageMagick is unavailable, use an equivalent image tool to place **BEFORE**/**AFTER** labels and stitch left/right.
 
 ## Step 4: Evaluate
 
@@ -139,6 +166,7 @@ Write a structured report to `ui-review-report.md` (or user-specified path).
 
 Include:
 - Screenshot references for each viewport
+- Combined before/after images from `combined/`
 - Per-viewport scores using criteria from `references/review-criteria.md`
 - Cross-viewport summary
 - Prioritized issue list
@@ -150,7 +178,7 @@ If **Major** or **Critical** issues exist:
 
 1. Present findings with specific fix suggestions
 2. If user approves, implement the fixes
-3. Re-run viewport capture and evaluation
+3. Re-run viewport capture and evaluation (save into `after/`)
 4. Repeat until all viewports score **Pass** or **Minor** only
 
 Use subagents for re-test cycles to keep context clean.
