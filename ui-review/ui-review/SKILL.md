@@ -20,16 +20,16 @@ Automated visual QA: interview the user, then test a web app's UI across viewpor
 
 ## Process Overview
 
-1. **Interview** — Gather route, credentials, and focus areas from user
+1. **Interview the USER** — Gather route, credentials, and focus areas from the USER
 2. **Login & Navigate** — Open the app and authenticate
 3. **Multi-Viewport Capture** — Screenshot at 8+ viewport sizes
 4. **Evaluate** — Score UI against design and responsive criteria
 5. **Report** — Deliver findings with actionable recommendations
 6. **Iterate** — Fix issues and re-test until all checks pass
 
-## Step 1: Interview
+## Step 1: Interview the USER
 
-Use `AskUserQuestion` to collect (skip any the user already provided):
+You MUST interview the USER. Use `AskUserQuestion` to collect (skip any the user already provided):
 
 1. **App URL** — Base URL (e.g., `http://localhost:3000`)
 2. **Route to test** — Specific path (e.g., `/dashboard`, `/settings/profile`)
