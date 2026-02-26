@@ -17,9 +17,13 @@ export PLANE_API_KEY="plane_api_..."
 export PLANE_WORKSPACE_SLUG="my-team"  # Optional, can pass --workspace instead
 ```
 
+`PLANE_API_URL` must be the Plane server root (for example, `https://todo.translate.mom`).
+Do not include UI route segments such as `/translatemom/projects/...`.
+
 ## Using the CLI Tool
 
-All operations use `plane.py` located at `~/.skills/plane-api/plane.py`.
+All operations use `plane.py` from this skill directory.
+In this environment, the path is `~/.skills/plane-api/plane.py` (other setups may use `~/.agents/skills/plane-api/plane.py`).
 
 ### Check API Compatibility
 
@@ -28,6 +32,8 @@ First, verify the Plane instance supports the v1 API (requires Plane v0.20+):
 ```bash
 python ~/.skills/plane-api/plane.py check-version
 ```
+
+`check-version` probes `GET /api/v1/workspaces/<PLANE_WORKSPACE_SLUG>/projects/` first (when `PLANE_WORKSPACE_SLUG` is set), then falls back to `GET /api/v1/workspaces/`. This avoids false negatives on deployments behind proxies where the top-level workspaces route may behave differently.
 
 ### List Projects
 

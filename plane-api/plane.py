@@ -78,7 +78,7 @@ def api_request(method: str, endpoint: str, data: dict | None = None) -> dict:
 
 def check_version() -> dict:
     """Check if the Plane instance supports the v1 API."""
-    base_url, api_key, _ = get_config()
+    base_url, api_key, workspace = get_config()
 
     result = {
         "base_url": base_url,
@@ -87,33 +87,53 @@ def check_version() -> dict:
         "message": "",
     }
 
-    # Test v1 endpoint exists
-    try:
-        req = Request(
-            f"{base_url}/api/v1/workspaces/",
-            headers={"X-API-Key": api_key, "Content-Type": "application/json"},
-            method="GET",
-        )
-        with urlopen(req) as response:
-            result["v1_api_available"] = True
-            result["api_key_auth_working"] = True
-            result["message"] = "v1 API is available and API key auth works"
-            return result
-    except HTTPError as e:
-        if e.code == 401:
-            result["v1_api_available"] = True
-            result["message"] = "v1 API exists but API key auth failed - check your key"
-        elif e.code == 404:
-            result["message"] = (
-                "v1 API not found - your Plane instance needs to be upgraded "
-                "to v0.20+ to use API key authentication"
+    headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
+    probe_endpoints = []
+    if workspace:
+        probe_endpoints.append(f"/api/v1/workspaces/{workspace}/projects/")
+    probe_endpoints.append("/api/v1/workspaces/")
+
+    probe_errors: list[tuple[str, int | None, str]] = []
+
+    for endpoint in probe_endpoints:
+        try:
+            req = Request(
+                f"{base_url}{endpoint}",
+                headers=headers,
+                method="GET",
             )
+            with urlopen(req):
+                result["v1_api_available"] = True
+                result["api_key_auth_working"] = True
+                result["message"] = f"v1 API is available and API key auth works (probe: {endpoint})"
+                return result
+        except HTTPError as e:
+            probe_errors.append((endpoint, e.code, e.reason))
+            if e.code == 401:
+                result["v1_api_available"] = True
+                result["message"] = f"v1 API exists at {endpoint} but API key auth failed - check your key"
+                return result
+        except Exception as e:
+            probe_errors.append((endpoint, None, str(e)))
+
+    http_errors = [(ep, code, reason) for ep, code, reason in probe_errors if code is not None]
+    if http_errors and all(code == 404 for _, code, _ in http_errors):
+        result["message"] = (
+            "v1 API not found on probed endpoints. Ensure PLANE_API_URL points to your "
+            "server root and Plane is v0.20+ for API key authentication."
+        )
+        return result
+
+    if probe_errors:
+        endpoint, code, reason = probe_errors[-1]
+        if code is None:
+            result["message"] = f"Connection error while probing {endpoint}: {reason}"
         else:
-            result["message"] = f"Unexpected error: {e.code} {e.reason}"
+            result["message"] = f"Unexpected error while probing {endpoint}: {code} {reason}"
         return result
-    except Exception as e:
-        result["message"] = f"Connection error: {e}"
-        return result
+
+    result["message"] = "Unable to verify API availability"
+    return result
 
 
 def list_projects(workspace_slug: str):
