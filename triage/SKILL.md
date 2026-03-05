@@ -6,15 +6,30 @@ user-invocable: true
 
 # /triage
 
-Fetch recent `claw_inbox` tasks and triage them fast.
+Triage quickly with this priority order: `in_progress` > `todo` > `claw_inbox`.
 
 ## Tool use
-1) Use `plane-api`:
+1) Use `plane-api` to fetch active work first:
+  - action: "list"
+  - limit: 20
+  - filters.state: "in_progress"
+
+2) Use `plane-api` to fetch queued work next:
+  - action: "list"
+  - limit: 20
+  - filters.state: "todo"
+
+3) Use `plane-api` to fetch inbox candidates:
   - action: "list"
   - limit: 20
   - filters.labels: ["claw_inbox"]
 
-2) If user chooses actions (e.g. "mark #2 high priority", "set due tomorrow", "archive #5"),
+4) Build recommendations with priority ordering:
+  - in_progress items first
+  - then todo items
+  - then claw_inbox items
+
+5) If user chooses actions (e.g. "mark #2 high priority", "set due tomorrow", "archive #5"),
    use `plane-api` action: "update" with the relevant patch.
 
 ## Output
