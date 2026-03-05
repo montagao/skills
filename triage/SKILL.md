@@ -1,18 +1,23 @@
 ---
 name: triage
-description: Show recent Plane work items and pick next actions.
+description: Review recent tasks and decide next actions.
 user-invocable: true
 ---
 
 # /triage
 
-Fetch the most recent work items and help me triage quickly.
+Fetch recent `claw_inbox` tasks and triage them fast.
 
 ## Tool use
-1) Run:
-- `exec`: `node {baseDir}/../plane-tools/plane.mjs list --limit 20`
+1) Use `plane-api`:
+  - action: "list"
+  - limit: 20
+  - filters.labels: ["claw_inbox"]
 
-2) Output a short triage:
-- "Top 5 to do next" (with 1-line why)
-- "Delete / defer / split candidates"
-- Ask ONE question only if needed (e.g. "Is this work or personal?")
+2) If user chooses actions (e.g. "mark #2 high priority", "set due tomorrow", "archive #5"),
+   use `plane-api` action: "update" with the relevant patch.
+
+## Output
+- Top 5 next actions (1 line each, why + next step)
+- Split/clarify candidates
+- One question max if needed (e.g. "Is this work or personal?")

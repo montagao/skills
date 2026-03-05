@@ -6,12 +6,18 @@ user-invocable: true
 
 # /review
 
-Weekly review based on current work items.
+Weekly review based on current tasks.
 
 ## Tool use
-- `exec`: `node {baseDir}/../plane-tools/plane.mjs list --limit 50`
+- Use `plane-api`:
+  - action: "list"
+  - limit: 50
 
 ## Output
 - Wins (3 bullets)
-- Stuck items (3 bullets + suggested next action)
+- Stuck items (3 bullets + next action)
 - Next week focus (3 bullets)
+
+## Notifications
+- If `{workspace}/.notifications_configured` does not exist, prompt the user for notifications
+  and route them to `/notifications`.

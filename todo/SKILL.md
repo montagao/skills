@@ -1,24 +1,29 @@
 ---
 name: todo
-description: Create a Plane work item quickly.
+description: Create a Plane task quickly.
 user-invocable: true
 ---
 
 # /todo
 
-Create a Plane work item from the user's input.
+Turn the user's message into a Plane work item.
 
-## Rules
-- Treat the entire command args as the title unless the user clearly specifies a due date or priority.
-- If user mentions a due date (e.g. "tomorrow", "next Monday"), convert to YYYY-MM-DD.
-- If user mentions priority (urgent/high/medium/low), set it.
+## Behavior
+- Default label: `claw_inbox`
+- Extract (best effort):
+  - due date (convert to YYYY-MM-DD)
+  - priority (urgent/high/medium/low/none)
+- If critical info is missing, ask at most one question; otherwise create with `Needs details` in description.
 
 ## Tool use
-Run:
-- `exec`:
-  - command: `node {baseDir}/../plane-tools/plane.mjs create <title> [--due YYYY-MM-DD] [--priority <level>]`
+- Use the `plane-api` skill:
+  - action: "create"
+  - title: from the user
+  - due/priority if detected
+  - labels: ["claw_inbox"]
 
-Then reply with:
+## Output
 - ✅ Created: <title>
 - ID: <id>
-- If it failed: show the status + error summary and suggest next fix.
+- Link: <url> (if available)
+- If failure: short error summary + what to fix (auth/base url/workspace/project).
