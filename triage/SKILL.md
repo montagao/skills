@@ -32,6 +32,9 @@ Triage quickly with this priority order: `in_progress` > `todo` > `claw_inbox`.
 5) If user chooses actions (e.g. "mark #2 high priority", "set due tomorrow", "archive #5"),
    use `plane-api` action: "update" with the relevant patch.
 
+6) If you include links to specific items, use the canonical `url` returned by `plane-api`;
+   never construct Plane issue URLs manually.
+
 ## Output
 - Top 5 next actions (1 line each, why + next step)
 - Split/clarify candidates

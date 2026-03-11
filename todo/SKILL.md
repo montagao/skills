@@ -48,10 +48,11 @@ When you use `interview`:
   - description: include the refined brief when available
   - due/priority if detected
   - labels: ["claw_inbox"]
+  - use the `url` returned by `plane-api` as the canonical issue link; never hand-build Plane links
 
 ## Output
 - ✅ Created: <title>
 - ID: <id>
-- Link: <url> (if available)
+- Link: <url> (if available, and it should be the canonical `browse/<ISSUE_KEY>` link)
 - Briefly mention whether the issue was fleshed out via `interview` or captured directly.
 - If failure: short error summary + what to fix (auth/base url/workspace/project).

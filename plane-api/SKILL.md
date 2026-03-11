@@ -10,7 +10,7 @@ A single, consistent interface to Plane.
 
 ## Config
 This skill reads Plane connection settings from secrets/environment (no prompting):
-- PLANE_BASE_URL
+- PLANE_BASE_URL (preferred) or `PLANE_API_URL`
 - PLANE_WORKSPACE_SLUG
 - PLANE_PROJECT_ID
 - PLANE_API_KEY
@@ -61,6 +61,10 @@ The caller provides a JSON object:
 - Never asks the user questions (callers handle that).
 - Enforces idempotency if the platform provides an incoming message id (best effort).
 - Returns structured JSON only.
+- When returning a work item URL, use the canonical web route:
+  - `https://<plane-domain>/<workspaceSlug>/browse/<PROJECT_IDENTIFIER>-<SEQUENCE_ID>`
+- Never synthesize legacy links like `/projects/<project>/issues/<issue>` because they can be wrong or redirect poorly.
+- If the human-facing issue key cannot be resolved safely, omit `url` instead of guessing.
 
 ## Output (always JSON)
 Success example:
@@ -68,7 +72,8 @@ Success example:
   "ok": true,
   "action": "create",
   "id": "...",
-  "url": "...",
+  "issue_key": "TMOM-461",
+  "url": "https://todo.translate.mom/translatemom/browse/TMOM-461",
   "title": "..."
 }
 

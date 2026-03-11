@@ -13,6 +13,7 @@ Create a realistic plan for today.
   - action: "list"
   - limit: 30
   - (optional filters depending on your workflow)
+- If you mention individual task links, use the canonical `url` returned by `plane-api`; never construct Plane issue URLs manually.
 
 ## Output format
 - 3 MITs (Most Important Tasks)

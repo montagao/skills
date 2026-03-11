@@ -12,6 +12,7 @@ Weekly review based on current tasks.
 - Use `plane-api`:
   - action: "list"
   - limit: 50
+- If you include links to specific items, use the canonical `url` returned by `plane-api`; never construct Plane issue URLs manually.
 
 ## Output
 - Wins (3 bullets)
