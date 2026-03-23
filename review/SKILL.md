@@ -8,6 +8,8 @@ user-invocable: true
 
 Weekly review based on current tasks.
 
+Bias toward signal, not activity. Surface the work that mattered, the important work that kept slipping, and the constraint that caused it.
+
 ## Tool use
 - Use `plane-api`:
   - action: "list"
@@ -16,8 +18,9 @@ Weekly review based on current tasks.
 
 ## Output
 - Wins (3 bullets)
-- Stuck items (3 bullets + next action)
-- Next week focus (3 bullets)
+- Stuck or avoided frogs (3 bullets + next action)
+- Recurring bottleneck to fix next week
+- Next week focus (3 bullets, with the first one being the likely frog)
 
 ## Notifications
 - If `{workspace}/.notifications_configured` does not exist, prompt the user for notifications

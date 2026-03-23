@@ -34,7 +34,10 @@ When you use `interview`:
 - ask enough questions to capture:
   - the problem or opportunity
   - the desired outcome
+  - why it matters / consequence if it slips
   - the scope and notable constraints
+  - the first visible next step
+  - the main bottleneck or unknown, if there is one
   - the next step or acceptance signal
 - then turn the resulting brief/spec into the Plane issue description
 - do not create the Plane item until the issue is concrete enough to be useful
@@ -45,7 +48,10 @@ When you use `interview`:
 - Use the `plane-api` skill:
   - action: "create"
   - title: from the user, or from the refined issue brief if `interview` was used
-  - description: include the refined brief when available
+  - description: include the refined brief when available, with a bias toward:
+    - why this matters
+    - first visible next step
+    - main bottleneck / open question
   - due/priority if detected
   - labels: ["claw_inbox"]
   - use the `url` returned by `plane-api` as the canonical issue link; never hand-build Plane links

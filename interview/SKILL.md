@@ -23,12 +23,14 @@ Ask non-obvious questions. Skip surface-level questions the user has likely alre
 - Edge cases and failure modes
 - Constraints and non-functional requirements
 - User personas and their specific needs
+- Highest-value outcome and consequence of delay
 - Integration points and dependencies
 - Security, privacy, and compliance implications
 - Scalability and performance expectations
 - Migration and backwards compatibility
 - Rollback and recovery strategies
 - Observability and debugging needs
+- First visible step and likely bottleneck
 - Trade-offs the user is willing to make
 
 ### Question Style
@@ -46,8 +48,9 @@ Adapt based on context, but consider:
 **Technical**: Architecture, data models, APIs, storage, caching, auth, error handling
 **UX**: User flows, states, feedback, accessibility, edge case UI
 **Operational**: Deployment, monitoring, alerts, on-call, maintenance
-**Business**: Success metrics, timelines, dependencies, stakeholders, budget constraints
+**Business**: Success metrics, timelines, dependencies, stakeholders, budget constraints, consequence of delay
 **Risk**: What could go wrong? What's the blast radius? What's the mitigation?
+**Execution**: What should happen first, and what bottleneck most likely slows this down?
 
 ## Output
 
