@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHON_BIN="${BASE_DIR}/.venv/bin/python"
+
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+  printf '%s\n' '{"ok": false, "error": {"code": "VENV_MISSING", "message": "Run scripts/install.sh to create the virtualenv"}}'
+  exit 3
+fi
+
+exec "${PYTHON_BIN}" "${BASE_DIR}/bin/gcal_cli.py" "$@"
