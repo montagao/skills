@@ -8,3 +8,9 @@ library-ebooks/books/
 *.azw
 *.azw3
 *.djvu
+
+# Local Node.js tooling for plane-api
+plane-api/node_modules/
+plane-api/coverage/
+plane-api/.nyc_output/
+plane-api/dist/

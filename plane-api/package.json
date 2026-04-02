@@ -1,0 +1,25 @@
+{
+  "name": "plane-api",
+  "private": true,
+  "type": "commonjs",
+  "bin": {
+    "plane-api": "./plane.js"
+  },
+  "scripts": {
+    "build": "bun run build:ubuntu",
+    "build:ubuntu": "bun build --compile --target=bun-linux-x64 ./plane.js --outfile dist/plane-api-linux-x64",
+    "build:ubuntu:baseline": "bun build --compile --target=bun-linux-x64-baseline ./plane.js --outfile dist/plane-api-linux-x64-baseline",
+    "build:ubuntu:modern": "bun build --compile --target=bun-linux-x64-modern ./plane.js --outfile dist/plane-api-linux-x64-modern",
+    "test": "c8 --100 --reporter=text --reporter=lcov --all --include=plane.js --exclude=tests/** node --test tests/*.test.js",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "format:check": "biome format --check .",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@biomejs/biome": "^2.4.10",
+    "c8": "^11.0.0",
+    "typescript": "^6.0.2"
+  }
+}
